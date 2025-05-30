@@ -45,13 +45,29 @@ hari_indonesia = {
     "Sunday": "Minggu"
 }
 
-# Bulan dalam Bahasa Indonesia
+# Bulan Masehi dalam Bahasa Indonesia
 def get_bulan(n):
     bulan_id = [
         "", "Januari", "Februari", "Maret", "April", "Mei", "Juni",
         "Juli", "Agustus", "September", "Oktober", "November", "Desember"
     ]
     return bulan_id[n]
+
+# Bulan Hijriyah dalam Bahasa Indonesia
+bulan_hijriyah_id = {
+    1: "Muharram",
+    2: "Safar",
+    3: "Rabiul Awal",
+    4: "Rabiul Akhir",
+    5: "Jumadil Awal",
+    6: "Jumadil Akhir",
+    7: "Rajab",
+    8: "Syaban",
+    9: "Ramadan",
+    10: "Syawal",
+    11: "Zulkaidah",
+    12: "Zulhijjah"
+}
 
 def get_pasaran(date_obj):
     delta_days = (date_obj - pasaran_start).days
@@ -60,7 +76,6 @@ def get_pasaran(date_obj):
 def get_tahun_jawa(masehi_year):
     return 1555 + (masehi_year - 2022)
 
-# Deteksi otomatis hari libur Islam & Imlek
 def is_libur_otomatis(masehi_date, hijri, lunar):
     libur = []
     if masehi_date.month == 1 and masehi_date.day == 1:
@@ -101,7 +116,7 @@ def generate_bulan(year, month):
             },
             "hijriyah": {
                 "tanggal": hijri.day,
-                "bulan": hijri.month_name('id'),
+                "bulan": bulan_hijriyah_id[hijri.month],
                 "tahun": hijri.year
             },
             "jawa": {
