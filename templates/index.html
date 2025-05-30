@@ -1,58 +1,120 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <title>Kalender Flip</title>
-    <script src="{{ url_for('static', filename='turn.js') }}"></script>
-    <style>
-        #flipbook {
-            width: 400px;
-            height: 600px;
-            margin: 20px auto;
-        }
-        .page {
-            background: white;
-            color: red;
-            padding: 20px;
-            font-family: sans-serif;
-            text-align: center;
-            border: 1px solid red;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Kalender Harian</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="{{ url_for('static', filename='turn.js') }}"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: white;
+      color: red;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #flipbook {
+      width: 350px;
+      height: 490px;
+    }
+    .page {
+      width: 100%;
+      height: 100%;
+      background: white;
+      color: red;
+      text-align: center;
+      box-sizing: border-box;
+      border: 1px solid red;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .date-big {
+      font-size: 150px;
+      font-weight: bold;
+    }
+    .minggu-ke {
+      margin-top: -20px;
+      font-size: 16px;
+    }
+    .day-block {
+      background-color: red;
+      color: white;
+      padding: 5px;
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+    }
+    .footer div {
+      flex: 1;
+    }
+    .footer p {
+      margin: 2px 0;
+    }
+  </style>
 </head>
 <body>
-    <div id="flipbook">
-        <div class="page">
-            <h1>{{ gregorian.tanggal }}</h1>
-            <h3>{{ gregorian.bulan }} {{ gregorian.tahun }}</h3>
-            <p>{{ gregorian.hari }} / {{ gregorian.hari_zh }}</p>
-            <p>{{ gregorian.minggu_ke }}</p>
-        </div>
-        <div class="page">
-            <h3>Kalender Jawa</h3>
-            <p>{{ jawa.tgl }} {{ jawa.bulan }}</p>
-            <p>{{ jawa.pasaran }}</p>
-        </div>
-        <div class="page">
-            <h3>Kalender Hijriyah</h3>
-            <p>{{ hijri.day }} {{ hijri.month_name() }} {{ hijri.year }}</p>
-        </div>
-        <div class="page">
-            <h3>Kalender Imlek</h3>
-            <p>{{ imlek.tgl }} Bulan {{ imlek.bulan }}</p>
-            <p>{{ imlek.catatan }}</p>
-        </div>
-    </div>
+  <div id="flipbook">
+    <div class="page">
+      <div class="header">
+        <div>{{ gregorian.bulan.upper() }} <span style="font-size: 18px;">{{ gregorian.zh_bulan }}</span></div>
+        <div>{{ gregorian.tahun }}</div>
+      </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            $('#flipbook').turn({
-                width: 400,
-                height: 600,
-                autoCenter: true
-            });
-        });
-    </script>
+      <div class="date-big">{{ gregorian.tanggal }}</div>
+      <div class="minggu-ke">MINGGU KE {{ gregorian.minggu_ke }}</div>
+
+      <div class="day-block">
+        {{ gregorian.hari.upper() }} / {{ gregorian.hari_zh }}<br>
+        <span style="font-size:12px;">{{ gregorian.hari_en }}</span>
+      </div>
+
+      <div class="footer">
+        <div>
+          <p>JAWA</p>
+          <p>{{ jawa.bulan.upper() }} {{ jawa.tahun }}</p>
+          <p>{{ jawa.tgl }}</p>
+          <p>{{ jawa.pasaran }}</p>
+        </div>
+        <div>
+          <p>IMLEK {{ imlek.tahun }}</p>
+          <p>{{ imlek.tgl }}</p>
+          <p>BULAN {{ imlek.bulan }}</p>
+          <p>{{ imlek.catatan }}</p>
+        </div>
+        <div>
+          <p>ARAB</p>
+          <p>{{ hijri.month_name() }} {{ hijri.year }}</p>
+          <p>{{ hijri.day }}</p>
+          <p style="font-family: 'Scheherazade', serif; font-size: 18px;">{{ hijri.arabic_day }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    $(document).ready(function () {
+      $('#flipbook').turn({
+        width: 350,
+        height: 490,
+        autoCenter: true
+      });
+    });
+  </script>
 </body>
 </html>
-
