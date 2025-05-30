@@ -34,13 +34,28 @@ libur_tetap = {
     datetime(2025, 6, 9): "Cuti Bersama Idul Adha 1446 Hijriyah",
 }
 
-# Fungsi-fungsi utilitas
+# Hari dalam Bahasa Indonesia
+hari_indonesia = {
+    "Monday": "Senin",
+    "Tuesday": "Selasa",
+    "Wednesday": "Rabu",
+    "Thursday": "Kamis",
+    "Friday": "Jumat",
+    "Saturday": "Sabtu",
+    "Sunday": "Minggu"
+}
+
+# Bulan dalam Bahasa Indonesia
+def get_bulan(n):
+    bulan_id = [
+        "", "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+    ]
+    return bulan_id[n]
+
 def get_pasaran(date_obj):
     delta_days = (date_obj - pasaran_start).days
     return pasaran_list[delta_days % 5]
-
-def get_bulan(n):
-    return calendar.month_name[n]
 
 def get_tahun_jawa(masehi_year):
     return 1555 + (masehi_year - 2022)
@@ -48,41 +63,27 @@ def get_tahun_jawa(masehi_year):
 # Deteksi otomatis hari libur Islam & Imlek
 def is_libur_otomatis(masehi_date, hijri, lunar):
     libur = []
-
     if masehi_date.month == 1 and masehi_date.day == 1:
         libur.append("Tahun Baru Masehi")
-
     if hijri.day == 1 and hijri.month == 1:
         libur.append("Tahun Baru Islam")
-
     if hijri.month == 10 and hijri.day in [1, 2]:
         libur.append("Hari Raya Idul Fitri")
-
     if hijri.month == 12 and hijri.day == 10:
         libur.append("Hari Raya Idul Adha")
-
     if hijri.month == 7 and hijri.day == 27:
         libur.append("Isra Mikraj")
-
     if lunar.month == 1 and lunar.day == 1:
         libur.append("Tahun Baru Imlek")
-
     return libur
 
-# Gabungan deteksi otomatis dan tetap
 def get_libur_lengkap(masehi_date, hijri, lunar):
     libur = []
-
-    # Manual (tetap)
     if masehi_date in libur_tetap:
         libur.append(libur_tetap[masehi_date])
-
-    # Otomatis
     libur += is_libur_otomatis(masehi_date, hijri, lunar)
-
     return ", ".join(libur) if libur else None
 
-# Pembuatan data per bulan
 def generate_bulan(year, month):
     month_data = []
     total_days = calendar.monthrange(year, month)[1]
@@ -90,13 +91,11 @@ def generate_bulan(year, month):
         masehi_date = datetime(year, month, day)
         hijri = convert.Gregorian(year, month, day).to_hijri()
         lunar = LunarDate.fromSolarDate(year, month, day)
-
         libur = get_libur_lengkap(masehi_date, hijri, lunar)
-
         data = {
             "masehi": {
                 "tanggal": day,
-                "hari": masehi_date.strftime('%A'),
+                "hari": hari_indonesia[masehi_date.strftime('%A')],
                 "bulan": get_bulan(month),
                 "tahun": year
             },
@@ -118,11 +117,9 @@ def generate_bulan(year, month):
             },
             "libur": libur
         }
-
         month_data.append(data)
     return month_data
 
-# Endpoint API
 @app.route("/kalender/<int:year>/<int:month>", methods=["GET"])
 def get_kalender(year, month):
     try:
@@ -137,7 +134,3 @@ def get_kalender(year, month):
 @app.route("/")
 def index():
     return "API Kalender Nasional, Islam, China, Jawa + Hari Libur Siap Digunakan!"
-
-# Jalankan Flask
-if __name__ == "__main__":
-    app.run(debug=True)
