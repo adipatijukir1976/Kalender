@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Kalender Flip</title>
+    <script src="{{ url_for('static', filename='turn.js') }}"></script>
+    <style>
+        #flipbook {
+            width: 400px;
+            height: 600px;
+            margin: 20px auto;
+        }
+        .page {
+            background: white;
+            color: red;
+            padding: 20px;
+            font-family: sans-serif;
+            text-align: center;
+            border: 1px solid red;
+        }
+    </style>
+</head>
+<body>
+    <div id="flipbook">
+        <div class="page">
+            <h1>{{ gregorian.tanggal }}</h1>
+            <h3>{{ gregorian.bulan }} {{ gregorian.tahun }}</h3>
+            <p>{{ gregorian.hari }} / {{ gregorian.hari_zh }}</p>
+            <p>{{ gregorian.minggu_ke }}</p>
+        </div>
+        <div class="page">
+            <h3>Kalender Jawa</h3>
+            <p>{{ jawa.tgl }} {{ jawa.bulan }}</p>
+            <p>{{ jawa.pasaran }}</p>
+        </div>
+        <div class="page">
+            <h3>Kalender Hijriyah</h3>
+            <p>{{ hijri.day }} {{ hijri.month_name() }} {{ hijri.year }}</p>
+        </div>
+        <div class="page">
+            <h3>Kalender Imlek</h3>
+            <p>{{ imlek.tgl }} Bulan {{ imlek.bulan }}</p>
+            <p>{{ imlek.catatan }}</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            $('#flipbook').turn({
+                width: 400,
+                height: 600,
+                autoCenter: true
+            });
+        });
+    </script>
+</body>
+</html>
