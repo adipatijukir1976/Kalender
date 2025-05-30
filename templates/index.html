@@ -2,24 +2,24 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Kalender Harian</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="{{ url_for('static', filename='turn.js') }}"></script>
   <style>
-    body {
-      font-family: sans-serif;
-      background: white;
-      color: red;
+    html, body {
       margin: 0;
       padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      height: 100%;
+      width: 100%;
+      background: white;
+      font-family: sans-serif;
+      color: red;
+      overflow: hidden;
     }
     #flipbook {
-      width: 350px;
-      height: 490px;
+      width: 100vw;
+      height: 100vh;
     }
     .page {
       width: 100%;
@@ -38,33 +38,34 @@
       display: flex;
       justify-content: space-between;
       font-weight: bold;
-      font-size: 20px;
+      font-size: 5vw;
     }
     .date-big {
-      font-size: 150px;
+      font-size: 25vw;
       font-weight: bold;
     }
     .minggu-ke {
-      margin-top: -20px;
-      font-size: 16px;
+      margin-top: -4vw;
+      font-size: 4vw;
     }
     .day-block {
       background-color: red;
       color: white;
-      padding: 5px;
+      padding: 1vw;
       font-weight: bold;
-      font-size: 20px;
+      font-size: 5vw;
     }
     .footer {
       display: flex;
       justify-content: space-between;
-      font-size: 12px;
+      font-size: 3vw;
     }
     .footer div {
       flex: 1;
+      padding: 0 1vw;
     }
     .footer p {
-      margin: 2px 0;
+      margin: 1vw 0;
     }
   </style>
 </head>
@@ -72,7 +73,7 @@
   <div id="flipbook">
     <div class="page">
       <div class="header">
-        <div>{{ gregorian.bulan.upper() }} <span style="font-size: 18px;">{{ gregorian.zh_bulan }}</span></div>
+        <div>{{ gregorian.bulan.upper() }} <span style="font-size: 4vw;">{{ gregorian.zh_bulan }}</span></div>
         <div>{{ gregorian.tahun }}</div>
       </div>
 
@@ -81,7 +82,7 @@
 
       <div class="day-block">
         {{ gregorian.hari.upper() }} / {{ gregorian.hari_zh }}<br>
-        <span style="font-size:12px;">{{ gregorian.hari_en }}</span>
+        <span style="font-size:3vw;">{{ gregorian.hari_en }}</span>
       </div>
 
       <div class="footer">
@@ -101,7 +102,7 @@
           <p>ARAB</p>
           <p>{{ hijri.month_name() }} {{ hijri.year }}</p>
           <p>{{ hijri.day }}</p>
-          <p style="font-family: 'Scheherazade', serif; font-size: 18px;">{{ hijri.arabic_day }}</p>
+          <p style="font-family: 'Scheherazade', serif; font-size: 4vw;">{{ hijri.arabic_day }}</p>
         </div>
       </div>
     </div>
@@ -110,10 +111,14 @@
   <script>
     $(document).ready(function () {
       $('#flipbook').turn({
-        width: 350,
-        height: 490,
+        width: $(window).width(),
+        height: $(window).height(),
         autoCenter: true
       });
+    });
+    // Update ukuran saat orientasi berubah
+    $(window).on('resize orientationchange', function () {
+      $('#flipbook').turn('size', $(window).width(), $(window).height());
     });
   </script>
 </body>
